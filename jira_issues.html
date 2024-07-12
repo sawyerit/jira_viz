@@ -1,0 +1,459 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+                <link href="lib/tom-select/tom-select.css" rel="stylesheet">
+                <script src="lib/tom-select/tom-select.complete.min.js"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 800px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 800px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+                <div id="select-menu" class="card-header">
+                    <div class="row no-gutters">
+                        <div class="col-10 pb-2">
+                            <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="selectNode([value]);"
+                            id="select-node"
+                            placeholder="Select node..."
+                            >
+                                <option selected>Select a Node by ID</option>
+                                
+                                    <option value="PROG-2">PROG-2</option>
+                                
+                                    <option value="PRO-3445">PRO-3445</option>
+                                
+                                    <option value="PRO-3444">PRO-3444</option>
+                                
+                                    <option value="PRO-3448">PRO-3448</option>
+                                
+                                    <option value="PRO-3447">PRO-3447</option>
+                                
+                                    <option value="PRO-3446">PRO-3446</option>
+                                
+                                    <option value="PRO-3440">PRO-3440</option>
+                                
+                                    <option value="PRO-3429">PRO-3429</option>
+                                
+                                    <option value="PDA-4406">PDA-4406</option>
+                                
+                                    <option value="PDA-4426">PDA-4426</option>
+                                
+                                    <option value="PDA-4425">PDA-4425</option>
+                                
+                                    <option value="PDA-4424">PDA-4424</option>
+                                
+                                    <option value="PDA-4423">PDA-4423</option>
+                                
+                                    <option value="PDA-4422">PDA-4422</option>
+                                
+                                    <option value="PDA-4421">PDA-4421</option>
+                                
+                                    <option value="PDA-4420">PDA-4420</option>
+                                
+                                    <option value="PDA-4419">PDA-4419</option>
+                                
+                                    <option value="PDA-4415">PDA-4415</option>
+                                
+                                    <option value="PDA-4409">PDA-4409</option>
+                                
+                                    <option value="PRO-3290">PRO-3290</option>
+                                
+                                    <option value="PRO-3289">PRO-3289</option>
+                                
+                                    <option value="PRO-3465">PRO-3465</option>
+                                
+                                    <option value="PRO-3288">PRO-3288</option>
+                                
+                                    <option value="PRO-3287">PRO-3287</option>
+                                
+                                    <option value="PRO-3334">PRO-3334</option>
+                                
+                                    <option value="PRO-3047">PRO-3047</option>
+                                
+                                    <option value="PRO-3072">PRO-3072</option>
+                                
+                                    <option value="PRO-2945">PRO-2945</option>
+                                
+                                    <option value="DCOM-653">DCOM-653</option>
+                                
+                                    <option value="PRO-3006">PRO-3006</option>
+                                
+                                    <option value="PRO-3004">PRO-3004</option>
+                                
+                                    <option value="PRO-3001">PRO-3001</option>
+                                
+                                    <option value="PRO-3000">PRO-3000</option>
+                                
+                                    <option value="PRO-2999">PRO-2999</option>
+                                
+                                    <option value="PRO-2998">PRO-2998</option>
+                                
+                                    <option value="PRO-2997">PRO-2997</option>
+                                
+                                    <option value="PRO-2981">PRO-2981</option>
+                                
+                                    <option value="DCOM-972">DCOM-972</option>
+                                
+                                    <option value="DCOM-984">DCOM-984</option>
+                                
+                                    <option value="DCOM-983">DCOM-983</option>
+                                
+                                    <option value="DCOM-982">DCOM-982</option>
+                                
+                                    <option value="DCOM-981">DCOM-981</option>
+                                
+                                    <option value="DCOM-980">DCOM-980</option>
+                                
+                                    <option value="DCOM-979">DCOM-979</option>
+                                
+                                    <option value="DCOM-978">DCOM-978</option>
+                                
+                                    <option value="DCOM-977">DCOM-977</option>
+                                
+                                    <option value="DCOM-967">DCOM-967</option>
+                                
+                                    <option value="DCOM-971">DCOM-971</option>
+                                
+                                    <option value="DCOM-966">DCOM-966</option>
+                                
+                                    <option value="DCOM-965">DCOM-965</option>
+                                
+                                    <option value="DCOM-963">DCOM-963</option>
+                                
+                                    <option value="DCOM-930">DCOM-930</option>
+                                
+                                    <option value="DCOM-931">DCOM-931</option>
+                                
+                                    <option value="DCOM-932">DCOM-932</option>
+                                
+                                    <option value="DCOM-812">DCOM-812</option>
+                                
+                                    <option value="PRO-3318">PRO-3318</option>
+                                
+                                    <option value="JS-17264">JS-17264</option>
+                                
+                                    <option value="DCOM-827">DCOM-827</option>
+                                
+                                    <option value="JS-17397">JS-17397</option>
+                                
+                                    <option value="DCOM-905">DCOM-905</option>
+                                
+                                    <option value="DCOM-902">DCOM-902</option>
+                                
+                                    <option value="DCOM-839">DCOM-839</option>
+                                
+                                    <option value="DCOM-949">DCOM-949</option>
+                                
+                                    <option value="DCOM-883">DCOM-883</option>
+                                
+                                    <option value="DCOM-879">DCOM-879</option>
+                                
+                                    <option value="DCOM-823">DCOM-823</option>
+                                
+                                    <option value="DCOM-826">DCOM-826</option>
+                                
+                                    <option value="DCOM-876">DCOM-876</option>
+                                
+                                    <option value="DCOM-846">DCOM-846</option>
+                                
+                                    <option value="DCOM-844">DCOM-844</option>
+                                
+                                    <option value="DCOM-828">DCOM-828</option>
+                                
+                                    <option value="DCOM-822">DCOM-822</option>
+                                
+                                    <option value="DCOM-831">DCOM-831</option>
+                                
+                                    <option value="DCOM-837">DCOM-837</option>
+                                
+                                    <option value="DCOM-836">DCOM-836</option>
+                                
+                                    <option value="DCOM-820">DCOM-820</option>
+                                
+                                    <option value="DCOM-818">DCOM-818</option>
+                                
+                                    <option value="DCOM-802">DCOM-802</option>
+                                
+                                    <option value="DCOM-825">DCOM-825</option>
+                                
+                                    <option value="DCOM-813">DCOM-813</option>
+                                
+                                    <option value="DCOM-795">DCOM-795</option>
+                                
+                                    <option value="DCOM-780">DCOM-780</option>
+                                
+                                    <option value="DCOM-776">DCOM-776</option>
+                                
+                                    <option value="DCOM-799">DCOM-799</option>
+                                
+                                    <option value="DCOM-783">DCOM-783</option>
+                                
+                                    <option value="DCOM-781">DCOM-781</option>
+                                
+                                    <option value="DCOM-777">DCOM-777</option>
+                                
+                                    <option value="DCOM-784">DCOM-784</option>
+                                
+                                    <option value="DCOM-787">DCOM-787</option>
+                                
+                                    <option value="DCOM-803">DCOM-803</option>
+                                
+                                    <option value="DCOM-785">DCOM-785</option>
+                                
+                                    <option value="DCOM-786">DCOM-786</option>
+                                
+                                    <option value="DCOM-788">DCOM-788</option>
+                                
+                                    <option value="DCOM-752">DCOM-752</option>
+                                
+                                    <option value="MOFO-23747">MOFO-23747</option>
+                                
+                                    <option value="MOFO-23212">MOFO-23212</option>
+                                
+                                    <option value="DATA-8418">DATA-8418</option>
+                                
+                                    <option value="CE-3409">CE-3409</option>
+                                
+                                    <option value="DCOM-808">DCOM-808</option>
+                                
+                                    <option value="CE-3210">CE-3210</option>
+                                
+                                    <option value="CE-3209">CE-3209</option>
+                                
+                                    <option value="CE-2879">CE-2879</option>
+                                
+                            </select>
+                        </div>
+                        <div class="col-2 pb-2">
+                            <button type="button" class="btn btn-primary btn-block" onclick="neighbourhoodHighlight({nodes: []});">Reset Selection</button>
+                        </div>
+                    </div>
+                </div>
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+                  new TomSelect("#select-node",{
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      }
+                  });
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": "PROG-2", "label": "PROG-2", "shape": "star", "size": 40}, {"color": "blue", "id": "PRO-3445", "label": "PRO-3445 - Cover Sheets for Redacted Original Format Resumes", "shape": "diamond"}, {"color": "blue", "id": "PRO-3444", "label": "PRO-3444 - Original Format Cover Sheets for Redaction", "shape": "square"}, {"color": "blue", "id": "PRO-3448", "label": "PRO-3448 - Add GetHeaders call to the resume endpoint", "shape": "dot"}, {"color": "blue", "id": "PRO-3447", "label": "PRO-3447 - Add call for original format + cover letter resume", "shape": "dot"}, {"color": "blue", "id": "PRO-3446", "label": "PRO-3446 - Document Services - Add Doc / Docx and RTF support to the converter output", "shape": "dot"}, {"color": "blue", "id": "PRO-3440", "label": "PRO-3440 - Add information to redaction cover sheets", "shape": "dot"}, {"color": "lightgray", "id": "PRO-3429", "label": "PRO-3429 - Spike: Research Adding cover sheet to redacted Original Format Resumes", "shape": "dot"}, {"color": "orange", "id": "PDA-4406", "label": "PDA-4406 - PDA Cover Sheet Dependency Work", "shape": "square"}, {"color": "orange", "id": "PDA-4426", "label": "PDA-4426 - Add rich text format workflow", "shape": "dot"}, {"color": "orange", "id": "PDA-4425", "label": "PDA-4425 - Create a Bundler for Doc files", "shape": "dot"}, {"color": "orange", "id": "PDA-4424", "label": "PDA-4424 - Create a Bundler for Docx files", "shape": "dot"}, {"color": "orange", "id": "PDA-4423", "label": "PDA-4423 - Update Output Format Logic to convert to the original format", "shape": "dot"}, {"color": "orange", "id": "PDA-4422", "label": "PDA-4422 - Implement the File Stream class throughout the convert services", "shape": "dot"}, {"color": "orange", "id": "PDA-4421", "label": "PDA-4421 - Create the dataclass to associate the Stream to the File Type", "shape": "dot"}, {"color": "orange", "id": "PDA-4420", "label": "PDA-4420 - Update Document Service Input for Original Format", "shape": "dot"}, {"color": "lightgray", "id": "PDA-4419", "label": "PDA-4419 - Add Tags to Infrastrcutre for Reporting", "shape": "dot"}, {"color": "lightgray", "id": "PDA-4415", "label": "PDA-4415 - Create flow diagram and tickets for Original Format document retrieval/merging", "shape": "dot"}, {"color": "lightgray", "id": "PDA-4409", "label": "PDA-4409 - Research and Discovery on Doc Services Project", "shape": "dot"}, {"color": "blue", "id": "PRO-3290", "label": "PRO-3290 - Selective Visibility", "shape": "diamond"}, {"color": "blue", "id": "PRO-3289", "label": "PRO-3289 - Redaction to all SRC (potential private email dependency for Tier 2 SRCs)", "shape": "diamond"}, {"color": "blue", "id": "PRO-3465", "label": "PRO-3465 - Redaction Customer Management", "shape": "square"}, {"color": "blue", "id": "PRO-3288", "label": "PRO-3288 - Redaction: Candidates who suppress phone", "shape": "diamond"}, {"color": "blue", "id": "PRO-3287", "label": "PRO-3287 - Selective Phone Visibility ", "shape": "diamond"}, {"color": "blue", "id": "PRO-3334", "label": "PRO-3334 - Redact Resumes when Phone Number is Hidden", "shape": "square"}, {"color": "blue", "id": "PRO-3047", "label": "PRO-3047 - [TS] Phone Number Visibility Updates", "shape": "square"}, {"color": "blue", "id": "PRO-3072", "label": "PRO-3072 - Update ingestion to populate or not populate candidate phone number based on new candidate field.", "shape": "dot"}, {"color": "blue", "id": "PRO-2945", "label": "PRO-2945 - [PRO] Phone number visibility", "shape": "square"}, {"color": "red", "id": "DCOM-653", "label": "DCOM-653 - SMS Messages", "shape": "diamond"}, {"color": "blue", "id": "PRO-3006", "label": "PRO-3006 - Phone number visibility option", "shape": "dot"}, {"color": "blue", "id": "PRO-3004", "label": "PRO-3004 - Integrate Phone Number Visibility field with DCS", "shape": "dot"}, {"color": "blue", "id": "PRO-3001", "label": "PRO-3001 - Update Proxy Lambda for Core API to filter Phone Number Visibility", "shape": "dot"}, {"color": "blue", "id": "PRO-3000", "label": "PRO-3000 - Create Backend endpoint to allow Phone Number filtering in calls to Core API", "shape": "dot"}, {"color": "blue", "id": "PRO-2999", "label": "PRO-2999 - Implement retrieval of Candidate Phone Number Visibility", "shape": "dot"}, {"color": "blue", "id": "PRO-2998", "label": "PRO-2998 - Update Backend to allow Candidates to set their Phone Number Visibility", "shape": "dot"}, {"color": "blue", "id": "PRO-2997", "label": "PRO-2997 - Implement Backend scaffolding to support setting Phone Number Visibility", "shape": "dot"}, {"color": "lightgray", "id": "PRO-2981", "label": "PRO-2981 - Selective phone visibility design spike", "shape": "dot"}, {"color": "red", "id": "DCOM-972", "label": "DCOM-972 - Allow List improvements", "shape": "diamond"}, {"color": "red", "id": "DCOM-984", "label": "DCOM-984 - Top Level Company Allow List Enhancement", "shape": "square"}, {"color": "red", "id": "DCOM-983", "label": "DCOM-983 - Data migration to import top level company id values", "shape": "dot"}, {"color": "red", "id": "DCOM-982", "label": "DCOM-982 - Update db, remove old data fields and code", "shape": "dot"}, {"color": "red", "id": "DCOM-981", "label": "DCOM-981 - Metrics for Private Email Allowed Domains", "shape": "dot"}, {"color": "red", "id": "DCOM-980", "label": "DCOM-980 - Update Blocking Service", "shape": "dot"}, {"color": "red", "id": "DCOM-979", "label": "DCOM-979 - CRUD API endpoint for  mapping top level company id to allowed domain list", "shape": "dot"}, {"color": "red", "id": "DCOM-978", "label": "DCOM-978 - Update Handling for User Creation and Update", "shape": "dot"}, {"color": "red", "id": "DCOM-977", "label": "DCOM-977 - Add table for mapping top level company id to allowed domain list", "shape": "dot"}, {"color": "red", "id": "DCOM-967", "label": "DCOM-967 - SPIKE: How to get a parent groupId based on UserID (2 days)", "shape": "dot"}, {"color": "red", "id": "DCOM-971", "label": "DCOM-971 - Privacy Center: Resource Center", "shape": "diamond"}, {"color": "red", "id": "DCOM-966", "label": "DCOM-966 - Relevance Defender MLP - Suppressed private emails with poor match (parse titles/skills)", "shape": "diamond"}, {"color": "red", "id": "DCOM-965", "label": "DCOM-965 - Relevance Defender MLP - Durable Sanction \u0026 Suppression Automation", "shape": "diamond"}, {"color": "red", "id": "DCOM-963", "label": "DCOM-963 - Placeholder: Enforce Private Email Limits or Bill for Overages", "shape": "diamond"}, {"color": "red", "id": "DCOM-930", "label": "DCOM-930 - Privacy Center: Surveys", "shape": "diamond"}, {"color": "red", "id": "DCOM-931", "label": "DCOM-931 - Research potential Survey tools", "shape": "square"}, {"color": "red", "id": "DCOM-932", "label": "DCOM-932 - SPIKE: Research options for a new survey tool", "shape": "dot"}, {"color": "red", "id": "DCOM-812", "label": "DCOM-812 - Privacy Center- Google/Yahoo Sender Compliance", "shape": "diamond"}, {"color": "lightgray", "id": "PRO-3318", "label": "PRO-3318 - Talent Search changes to support Gmail compliance", "shape": "square"}, {"color": "purple", "id": "JS-17264", "label": "JS-17264 - Job alerts - Handle Unsubscribe Event", "shape": "square"}, {"color": "lightgray", "id": "DCOM-827", "label": "DCOM-827 - Sync Iterable Unsubscribes", "shape": "dot"}, {"color": "lightgray", "id": "JS-17397", "label": "JS-17397 - SS API - Handle notification platform unsubscribe messages", "shape": "dot"}, {"color": "lightgray", "id": "DCOM-905", "label": "DCOM-905 - 1 Click Unsubscribe - Release", "shape": "square"}, {"color": "lightgray", "id": "DCOM-902", "label": "DCOM-902 - 1 Click Unsubscribe - Operational Readiness", "shape": "square"}, {"color": "red", "id": "DCOM-839", "label": "DCOM-839 - 1-click Unsubscribe: Update non-transactional senders besides private email", "shape": "square"}, {"color": "red", "id": "DCOM-949", "label": "DCOM-949 - Send Email API - Add PUT Suppression Endpoint", "shape": "dot"}, {"color": "lightgray", "id": "DCOM-883", "label": "DCOM-883 - Update Iterable webhook handler to support job search alerts", "shape": "dot"}, {"color": "lightgray", "id": "DCOM-879", "label": "DCOM-879 - Notifications Platform Update non-transactional email templates to include RFC 8058 headers", "shape": "dot"}, {"color": "lightgray", "id": "DCOM-823", "label": "DCOM-823 - SPIKE: Notifications Platform: Plan replacement senders not currently using Notifications Platform (2 days)", "shape": "dot"}, {"color": "red", "id": "DCOM-826", "label": "DCOM-826 - 1-click unsubscribe handling", "shape": "square"}, {"color": "lightgray", "id": "DCOM-876", "label": "DCOM-876 - Notifications Platform - Integration tests for new Send Email API are updated", "shape": "dot"}, {"color": "lightgray", "id": "DCOM-846", "label": "DCOM-846 - Notifications Platform \u003e Implement transmissions/stored-template", "shape": "dot"}, {"color": "lightgray", "id": "DCOM-844", "label": "DCOM-844 - Update `sendUserNotification` to use new EmailServiceProvider", "shape": "dot"}, {"color": "lightgray", "id": "DCOM-828", "label": "DCOM-828 - Notifications Platform: Stub out notifications SNS Topic for manual testing", "shape": "dot"}, {"color": "lightgray", "id": "DCOM-822", "label": "DCOM-822 - Notifications Platform: Add POST List-Unsubscribe Handling", "shape": "dot"}, {"color": "lightgray", "id": "DCOM-831", "label": "DCOM-831 - Protected Profile: Handle 1-click unsubscribe", "shape": "dot"}, {"color": "red", "id": "DCOM-837", "label": "DCOM-837 - Ensure all unsubscribe paths result in UnsubscribeRequested Domain Event Publication", "shape": "dot"}, {"color": "lightgray", "id": "DCOM-836", "label": "DCOM-836 - Update unsubscribeUser flow to send UnsubscribeRequested SNS message", "shape": "dot"}, {"color": "lightgray", "id": "DCOM-820", "label": "DCOM-820 - SPIKE: Notifications Platform: Plan POST List-Unsubscribe Handling - 4 days", "shape": "dot"}, {"color": "lightgray", "id": "DCOM-818", "label": "DCOM-818 - Notifications UI: Add POST List-Unsubscribe forwarding to dice.com/unsubscribe", "shape": "dot"}, {"color": "lightgray", "id": "DCOM-802", "label": "DCOM-802 - SPIKE: One Click Unsubscribe: Determine changes required for Iterable and Notifications Platform (2 Days)", "shape": "dot"}, {"color": "lightgray", "id": "DCOM-825", "label": "DCOM-825 - Add 1-click unsubscribe to private email", "shape": "square"}, {"color": "lightgray", "id": "DCOM-813", "label": "DCOM-813 - Research options of 1-click unsubscribe", "shape": "square"}, {"color": "lightgray", "id": "DCOM-795", "label": "DCOM-795 - Private email repurpose of Block to unsubscribe", "shape": "square"}, {"color": "red", "id": "DCOM-780", "label": "DCOM-780 - Private Email Template updates", "shape": "diamond"}, {"color": "red", "id": "DCOM-776", "label": "DCOM-776 - SPAM: Private Email Research", "shape": "square"}, {"color": "lightgray", "id": "DCOM-799", "label": "DCOM-799 - SPIKE: Investigate Required Changes for Email Authentication Requirements", "shape": "dot"}, {"color": "lightgray", "id": "DCOM-783", "label": "DCOM-783 - Correct transactional status of emails.", "shape": "dot"}, {"color": "lightgray", "id": "DCOM-781", "label": "DCOM-781 - SPIKE: Audit of existing emails", "shape": "dot"}, {"color": "lightgray", "id": "DCOM-777", "label": "DCOM-777 - SPIKE: Research moving templates to Sparkpost: 5 days", "shape": "dot"}, {"color": "red", "id": "DCOM-784", "label": "DCOM-784 - Migrate Dice Candidate Anonymous Template to SparkPost", "shape": "dot"}, {"color": "red", "id": "DCOM-787", "label": "DCOM-787 - Migrate dice-job-query-template.ftl to SparkPost", "shape": "dot"}, {"color": "red", "id": "DCOM-803", "label": "DCOM-803 - Create a SparkPost templates repository", "shape": "dot"}, {"color": "lightgray", "id": "DCOM-785", "label": "DCOM-785 - Migrate Dice Candidate Template to SparkPost", "shape": "dot"}, {"color": "lightgray", "id": "DCOM-786", "label": "DCOM-786 - Migrate Dice Recruiter Template to SparkPost", "shape": "dot"}, {"color": "lightgray", "id": "DCOM-788", "label": "DCOM-788 - Update Protected Profile to take the templates from SparkPost", "shape": "dot"}, {"color": "red", "id": "DCOM-752", "label": "DCOM-752 - Overcontacting Prevention", "shape": "diamond"}, {"color": "lightgray", "id": "MOFO-23747", "label": "MOFO-23747 - Dice: API \u003e Selective Phone Visibility", "shape": "square"}, {"color": "pink", "id": "MOFO-23212", "label": "MOFO-23212 - Dice: iOS \u003e Selective Phone Visibility", "shape": "square"}, {"color": "brown", "id": "DATA-8418", "label": "DATA-8418 - Client Feedback Automation", "shape": "diamond"}, {"color": "lightgray", "id": "CE-3409", "label": "CE-3409 - SPAM - Suppression Automation", "shape": "diamond"}, {"color": "lightgray", "id": "DCOM-808", "label": "DCOM-808 - Sender Suppression Automation", "shape": "square"}, {"color": "lightgray", "id": "CE-3210", "label": "CE-3210 - RPA - Compliance: Private Email - Suppressions", "shape": "square"}, {"color": "lightgray", "id": "CE-3209", "label": "CE-3209 - SPAM - Sanction Automation", "shape": "diamond"}, {"color": "lightgray", "id": "CE-2879", "label": "CE-2879 - RPA - Compliance: Private Email - Sanctions", "shape": "square"}]);
+                  edges = new vis.DataSet([{"arrows": "to", "color": "blue", "from": "PROG-2", "to": "PRO-3445", "weight": 1}, {"arrows": "to", "color": "blue", "from": "PRO-3445", "to": "PRO-3444", "weight": 1}, {"arrows": "to", "color": "blue", "from": "PRO-3444", "to": "PRO-3448", "weight": 1}, {"arrows": "to", "color": "red", "dashes": true, "from": "PRO-3448", "to": "PRO-3447", "weight": 3}, {"arrows": "to", "color": "blue", "from": "PRO-3444", "to": "PRO-3447", "weight": 1}, {"arrows": "to", "color": "blue", "from": "PRO-3444", "to": "PRO-3446", "weight": 1}, {"arrows": "to", "color": "blue", "from": "PRO-3444", "to": "PRO-3440", "weight": 1}, {"arrows": "to", "color": "lightgray", "from": "PRO-3444", "to": "PRO-3429", "weight": 1}, {"arrows": "to", "color": "orange", "from": "PRO-3445", "to": "PDA-4406", "weight": 1}, {"arrows": "to", "color": "orange", "from": "PDA-4406", "to": "PDA-4426", "weight": 1}, {"arrows": "to", "color": "orange", "from": "PDA-4406", "to": "PDA-4425", "weight": 1}, {"arrows": "to", "color": "orange", "from": "PDA-4406", "to": "PDA-4424", "weight": 1}, {"arrows": "to", "color": "orange", "from": "PDA-4406", "to": "PDA-4423", "weight": 1}, {"arrows": "to", "color": "orange", "from": "PDA-4406", "to": "PDA-4422", "weight": 1}, {"arrows": "to", "color": "orange", "from": "PDA-4406", "to": "PDA-4421", "weight": 1}, {"arrows": "to", "color": "orange", "from": "PDA-4406", "to": "PDA-4420", "weight": 1}, {"arrows": "to", "color": "lightgray", "from": "PDA-4406", "to": "PDA-4419", "weight": 1}, {"arrows": "to", "color": "lightgray", "from": "PDA-4406", "to": "PDA-4415", "weight": 1}, {"arrows": "to", "color": "lightgray", "from": "PDA-4406", "to": "PDA-4409", "weight": 1}, {"arrows": "to", "color": "blue", "from": "PROG-2", "to": "PRO-3290", "weight": 1}, {"arrows": "to", "color": "blue", "from": "PROG-2", "to": "PRO-3289", "weight": 1}, {"arrows": "to", "color": "blue", "from": "PRO-3289", "to": "PRO-3465", "weight": 1}, {"arrows": "to", "color": "blue", "from": "PROG-2", "to": "PRO-3288", "weight": 1}, {"arrows": "to", "color": "blue", "from": "PROG-2", "to": "PRO-3287", "weight": 1}, {"arrows": "to", "color": "blue", "from": "PRO-3287", "to": "PRO-3334", "weight": 1}, {"arrows": "to", "color": "blue", "from": "PRO-3287", "to": "PRO-3047", "weight": 1}, {"arrows": "to", "color": "blue", "from": "PRO-3047", "to": "PRO-3072", "weight": 1}, {"arrows": "to", "color": "blue", "from": "PRO-3287", "to": "PRO-2945", "weight": 1}, {"arrows": "to", "color": "blue", "dashes": true, "from": "PRO-2945", "to": "DCOM-653", "weight": 1}, {"arrows": "to", "color": "blue", "from": "PRO-2945", "to": "PRO-3006", "weight": 1}, {"arrows": "to", "color": "blue", "from": "PRO-2945", "to": "PRO-3004", "weight": 1}, {"arrows": "to", "color": "blue", "from": "PRO-2945", "to": "PRO-3001", "weight": 1}, {"arrows": "to", "color": "blue", "dashes": true, "from": "PRO-3001", "to": "PRO-3000", "weight": 1}, {"arrows": "to", "color": "blue", "from": "PRO-2945", "to": "PRO-3000", "weight": 1}, {"arrows": "to", "color": "blue", "dashes": true, "from": "PRO-3000", "to": "PRO-2999", "weight": 1}, {"arrows": "to", "color": "blue", "from": "PRO-2945", "to": "PRO-2999", "weight": 1}, {"arrows": "to", "color": "blue", "from": "PRO-2945", "to": "PRO-2998", "weight": 1}, {"arrows": "to", "color": "blue", "dashes": true, "from": "PRO-2998", "to": "PRO-2997", "weight": 1}, {"arrows": "to", "color": "blue", "from": "PRO-2945", "to": "PRO-2997", "weight": 1}, {"arrows": "to", "color": "lightgray", "from": "PRO-2945", "to": "PRO-2981", "weight": 1}, {"arrows": "to", "color": "red", "from": "PROG-2", "to": "DCOM-972", "weight": 1}, {"arrows": "to", "color": "red", "from": "DCOM-972", "to": "DCOM-984", "weight": 1}, {"arrows": "to", "color": "red", "from": "DCOM-984", "to": "DCOM-983", "weight": 1}, {"arrows": "to", "color": "red", "dashes": true, "from": "DCOM-983", "to": "DCOM-982", "weight": 3}, {"arrows": "to", "color": "red", "from": "DCOM-984", "to": "DCOM-982", "weight": 1}, {"arrows": "to", "color": "red", "from": "DCOM-984", "to": "DCOM-981", "weight": 1}, {"arrows": "to", "color": "red", "from": "DCOM-984", "to": "DCOM-980", "weight": 1}, {"arrows": "to", "color": "red", "dashes": true, "from": "DCOM-980", "to": "DCOM-981", "weight": 3}, {"arrows": "to", "color": "red", "from": "DCOM-984", "to": "DCOM-979", "weight": 1}, {"arrows": "to", "color": "red", "from": "DCOM-984", "to": "DCOM-978", "weight": 1}, {"arrows": "to", "color": "red", "dashes": true, "from": "DCOM-978", "to": "DCOM-980", "weight": 3}, {"arrows": "to", "color": "red", "dashes": true, "from": "DCOM-978", "to": "DCOM-983", "weight": 3}, {"arrows": "to", "color": "red", "from": "DCOM-984", "to": "DCOM-977", "weight": 1}, {"arrows": "to", "color": "red", "dashes": true, "from": "DCOM-977", "to": "DCOM-978", "weight": 3}, {"arrows": "to", "color": "red", "dashes": true, "from": "DCOM-977", "to": "DCOM-979", "weight": 3}, {"arrows": "to", "color": "red", "from": "DCOM-984", "to": "DCOM-967", "weight": 1}, {"arrows": "to", "color": "red", "from": "PROG-2", "to": "DCOM-971", "weight": 1}, {"arrows": "to", "color": "red", "from": "PROG-2", "to": "DCOM-966", "weight": 1}, {"arrows": "to", "color": "red", "from": "PROG-2", "to": "DCOM-965", "weight": 1}, {"arrows": "to", "color": "red", "from": "PROG-2", "to": "DCOM-963", "weight": 1}, {"arrows": "to", "color": "red", "from": "PROG-2", "to": "DCOM-930", "weight": 1}, {"arrows": "to", "color": "red", "from": "DCOM-930", "to": "DCOM-931", "weight": 1}, {"arrows": "to", "color": "red", "from": "DCOM-931", "to": "DCOM-932", "weight": 1}, {"arrows": "to", "color": "red", "from": "PROG-2", "to": "DCOM-812", "weight": 1}, {"arrows": "to", "color": "lightgray", "from": "DCOM-812", "to": "PRO-3318", "weight": 1}, {"arrows": "to", "color": "purple", "from": "DCOM-812", "to": "JS-17264", "weight": 1}, {"arrows": "to", "color": "red", "dashes": true, "from": "JS-17264", "to": "DCOM-827", "weight": 3}, {"arrows": "to", "color": "lightgray", "from": "JS-17264", "to": "JS-17397", "weight": 1}, {"arrows": "to", "color": "lightgray", "from": "DCOM-812", "to": "DCOM-905", "weight": 1}, {"arrows": "to", "color": "lightgray", "from": "DCOM-812", "to": "DCOM-902", "weight": 1}, {"arrows": "to", "color": "red", "from": "DCOM-812", "to": "DCOM-839", "weight": 1}, {"arrows": "to", "color": "red", "from": "DCOM-839", "to": "DCOM-949", "weight": 1}, {"arrows": "to", "color": "red", "dashes": true, "from": "DCOM-949", "to": "JS-17264", "weight": 3}, {"arrows": "to", "color": "lightgray", "from": "DCOM-839", "to": "DCOM-883", "weight": 1}, {"arrows": "to", "color": "red", "dashes": true, "from": "DCOM-883", "to": "JS-17397", "weight": 3}, {"arrows": "to", "color": "lightgray", "from": "DCOM-839", "to": "DCOM-879", "weight": 1}, {"arrows": "to", "color": "lightgray", "from": "DCOM-839", "to": "DCOM-823", "weight": 1}, {"arrows": "to", "color": "red", "dashes": true, "from": "DCOM-823", "to": "DCOM-827", "weight": 3}, {"arrows": "to", "color": "red", "from": "DCOM-812", "to": "DCOM-826", "weight": 1}, {"arrows": "to", "color": "lightgray", "from": "DCOM-826", "to": "DCOM-876", "weight": 1}, {"arrows": "to", "color": "lightgray", "from": "DCOM-826", "to": "DCOM-846", "weight": 1}, {"arrows": "to", "color": "lightgray", "from": "DCOM-826", "to": "DCOM-844", "weight": 1}, {"arrows": "to", "color": "lightgray", "from": "DCOM-826", "to": "DCOM-828", "weight": 1}, {"arrows": "to", "color": "red", "dashes": true, "from": "DCOM-828", "to": "DCOM-822", "weight": 3}, {"arrows": "to", "color": "red", "dashes": true, "from": "DCOM-828", "to": "DCOM-831", "weight": 3}, {"arrows": "to", "color": "lightgray", "from": "DCOM-826", "to": "DCOM-827", "weight": 1}, {"arrows": "to", "color": "lightgray", "from": "DCOM-826", "to": "DCOM-822", "weight": 1}, {"arrows": "to", "color": "red", "dashes": true, "from": "DCOM-822", "to": "DCOM-837", "weight": 3}, {"arrows": "to", "color": "red", "dashes": true, "from": "DCOM-822", "to": "DCOM-836", "weight": 3}, {"arrows": "to", "color": "lightgray", "from": "DCOM-826", "to": "DCOM-820", "weight": 1}, {"arrows": "to", "color": "lightgray", "from": "DCOM-826", "to": "DCOM-818", "weight": 1}, {"arrows": "to", "color": "lightgray", "from": "DCOM-826", "to": "DCOM-802", "weight": 1}, {"arrows": "to", "color": "lightgray", "from": "DCOM-812", "to": "DCOM-825", "weight": 1}, {"arrows": "to", "color": "lightgray", "from": "DCOM-812", "to": "DCOM-813", "weight": 1}, {"arrows": "to", "color": "lightgray", "from": "DCOM-812", "to": "DCOM-795", "weight": 1}, {"arrows": "to", "color": "red", "from": "PROG-2", "to": "DCOM-780", "weight": 1}, {"arrows": "to", "color": "red", "from": "DCOM-780", "to": "DCOM-776", "weight": 1}, {"arrows": "to", "color": "lightgray", "from": "DCOM-776", "to": "DCOM-799", "weight": 1}, {"arrows": "to", "color": "lightgray", "from": "DCOM-776", "to": "DCOM-783", "weight": 1}, {"arrows": "to", "color": "lightgray", "from": "DCOM-776", "to": "DCOM-781", "weight": 1}, {"arrows": "to", "color": "lightgray", "from": "DCOM-776", "to": "DCOM-777", "weight": 1}, {"arrows": "to", "color": "lightgray", "dashes": true, "from": "DCOM-777", "to": "DCOM-784", "weight": 1}, {"arrows": "to", "color": "lightgray", "dashes": true, "from": "DCOM-777", "to": "DCOM-787", "weight": 1}, {"arrows": "to", "color": "lightgray", "dashes": true, "from": "DCOM-777", "to": "DCOM-803", "weight": 1}, {"arrows": "to", "color": "lightgray", "dashes": true, "from": "DCOM-777", "to": "DCOM-785", "weight": 1}, {"arrows": "to", "color": "lightgray", "dashes": true, "from": "DCOM-777", "to": "DCOM-786", "weight": 1}, {"arrows": "to", "color": "lightgray", "dashes": true, "from": "DCOM-777", "to": "DCOM-788", "weight": 1}, {"arrows": "to", "color": "red", "from": "PROG-2", "to": "DCOM-752", "weight": 1}, {"arrows": "to", "color": "lightgray", "from": "DCOM-752", "to": "MOFO-23747", "weight": 1}, {"arrows": "to", "color": "pink", "from": "DCOM-752", "to": "MOFO-23212", "weight": 1}, {"arrows": "to", "color": "brown", "from": "PROG-2", "to": "DATA-8418", "weight": 1}, {"arrows": "to", "color": "lightgray", "from": "PROG-2", "to": "CE-3409", "weight": 1}, {"arrows": "to", "color": "lightgray", "from": "CE-3409", "to": "DCOM-808", "weight": 1}, {"arrows": "to", "color": "lightgray", "from": "CE-3409", "to": "CE-3210", "weight": 1}, {"arrows": "to", "color": "lightgray", "from": "PROG-2", "to": "CE-3209", "weight": 1}, {"arrows": "to", "color": "lightgray", "from": "CE-3209", "to": "CE-2879", "weight": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"interaction": {"hover": true}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+                    network.on("selectNode", neighbourhoodHighlight);
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

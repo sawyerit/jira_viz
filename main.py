@@ -11,10 +11,11 @@ color_dict = {
     "MOFO": "pink",
     "BRAND": "yellow",
     "IDT": "gold",
+    "DCOM": "red"
 }
 
 # Connect to Jira using the Jira Python API
-jira_instance = jira.JIRA(server="https://xxxx.atlassian.net", basic_auth=("<username>", "<appkey>"))
+jira_instance = jira.JIRA(server="https://dhi-jira.atlassian.net", basic_auth=("shane.sawyer@dhigroupinc.com", "ntbasrjBBRWuIPP6cATa84DA"))
 
 
 def set_color(issue):
@@ -77,14 +78,13 @@ def build_graph(issues, parent_key):
 
 
 G = nx.Graph()
-base_ticket = "PROG-1"
+base_ticket = "PROG-2"
 issues = jira_instance.search_issues(f'"Parent Link" = {base_ticket}', maxResults=20) # Fetch all the issues in Jira
 net = Network(notebook=False, directed=True, height="800px", select_menu=True) # Initialize the network
 net.add_node(base_ticket, label=base_ticket, shape="star", size=40)
 
 build_graph(issues, base_ticket)
 
-net.from_nx(G)
 
 # Show the network
 # net.show_buttons(filter_=['nodes'])
