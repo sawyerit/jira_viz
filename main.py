@@ -15,7 +15,7 @@ color_dict = {
 }
 
 # Connect to Jira using the Jira Python API
-jira_instance = jira.JIRA(server="https://dhi-jira.atlassian.net", basic_auth=("username", "key"))
+jira_instance = jira.JIRA(server="https://<subdomain>.atlassian.net", basic_auth=("username", "key"))
 
 
 def set_color(issue):
