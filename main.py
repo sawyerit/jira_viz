@@ -98,3 +98,5 @@ const options = {
 
 # even tho notebook is false on the net definition, it needs to be set again here
 net.write_html("jira_issues.html",notebook=False)
+
+## Todo: explore D3 rather than pyvis, its much more customizable
